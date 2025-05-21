@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" xml:lang="es">
+<head>
+    <title th:remove="all">Usuarios Registrados</title>
+    <th:block th:insert="~{fragments :: head (titulo='Usuarios Registrados')}"></th:block>
+</head>
+<body>
+<div class="container-fluid">
+    <div th:replace="~{fragments :: navbar(
+        ${loggedIn},
+        ${usuario.nombre}
+    )}"></div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <h2>Usuarios Registrados</h2>
+
+            <div th:if="${error}" class="alert alert-danger" role="alert">
+                <span th:text="${error}"></span>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(usuarios)}">
+                    <td colspan="3" class="text-center">No hay usuarios registrados</td>
+                </tr>
+                <tr th:each="usuarioFila : ${usuarios}">
+                    <td th:text="${usuarioFila.id}">-1</td>
+                    <td th:text="${usuarioFila.email}">email@placeholder</td>
+                    <td>
+                        <a th:href="@{/registered/{id}(id=${usuarioFila.id})}"
+                           class="btn btn-info btn-sm">Ver detalles</a>
+
+                        <!-- Botón de bloqueo/desbloqueo (usar usuarioLogeado) -->
+                        <button th:if="${usuario.admin and usuario.id != usuarioFila.id}"
+                                th:data-id="${usuarioFila.id}"
+                                th:data-enabled="${usuarioFila.enabled}"
+                                class="btn btn-sm ml-2"
+                                th:classappend="${usuarioFila.enabled} ? 'btn-danger' : 'btn-success'"
+                                th:text="${usuarioFila.enabled} ? 'Bloquear' : 'Desbloquear'"
+                                onclick="toggleUserStatus(this)">
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments::javascript}"></div>
+
+<script>
+    function toggleUserStatus(button) {
+        const userId = button.getAttribute('data-id');
+        const isEnabled = button.getAttribute('data-enabled') === 'true';
+
+        fetch(`/registered/${userId}/status?enabled=${!isEnabled}`, {
+            method: 'PUT'
+        }).then(response => {
+            if (response.ok) {
+                // Actualizar estado visual del botón
+                const newState = !isEnabled;
+                button.setAttribute('data-enabled', newState);
+                button.textContent = newState ? 'Bloquear' : 'Desbloquear';
+                button.classList.remove(newState ? 'btn-success' : 'btn-danger');
+                button.classList.add(newState ? 'btn-danger' : 'btn-success');
+            }
+        });
+    }
+</script>
+</body>
+</html>

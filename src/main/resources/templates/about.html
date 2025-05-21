@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head (titulo='Acerca de')"></head>
+<body>
+<div th:replace="~{fragments :: navbar(
+    ${loggedIn},
+    ${usuario != null ? usuario.nombre : 'Guest'}
+)}"></div>
+<div class="container-fluid">
+    <div class="container-fluid">
+        <h1>ToDoList</h1>
+        <ul>
+            <li>Developed by Alejandro Coves Bolaños</li>
+            <li>Version 1.1.0</li>
+            <li>Release date: 04/07/2025</li>
+        </ul>
+    </div>
+</div>
+<div th:replace="fragments::javascript"/>
+</body>
+</html>

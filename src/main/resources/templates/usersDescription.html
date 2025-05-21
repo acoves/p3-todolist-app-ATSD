@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" xml:lang="es">
+<head>
+    <title th:remove="all">User Details</title>
+    <th:block th:insert="~{fragments :: head (titulo='User Details')}"></th:block>
+</head>
+<body>
+<div class="container-fluid">
+    <div th:replace="~{fragments :: navbar(${loggedIn}, ${usuarioLogeado.nombre ?: 'Invitado'})}"></div>
+
+    <div class="row mt-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <span th:text="${usuario.nombre} ?: 'Usuario sin nombre'"></span>
+                        <small th:text="'(@' + (${usuario.email} ?: 'sin email') + ')'" class="text-muted"></small>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Email:</strong>
+                            <span th:text="${usuario.email} ?: 'No especificado'"></span>
+                        <li class="list-group-item">
+                            <strong>Fecha de nacimiento:</strong>
+                            <span th:if="${usuario.fechaNacimiento != null}"
+                                  th:text="${#temporals.format(usuario.fechaNacimiento, 'dd/MM/yyyy')}">
+                            </span>
+                            <span th:if="${usuario.fechaNacimiento == null}">No especificada</span>
+                        </li>
+                    </ul>
+                    <a th:href="@{/registered}" class="btn btn-secondary mt-3">Volver a la lista</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments::javascript}"></div>
+</body>
+</html>
