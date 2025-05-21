@@ -7,12 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="atsd-todolist-your-full-name" />
+        <module name="atsd-todolist-AlejandroCoves" />
         <module name="atsd-todolist-jose-manuel-gandia-zaragoza" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="atsd-todolist-AlejandroCoves" options="-parameters" />
       <module name="atsd-todolist-jose-manuel-gandia-zaragoza" options="-parameters" />
       <module name="atsd-todolist-your-full-name" options="-parameters" />
     </option>
