@@ -18,7 +18,7 @@ jobs:
           POSTGRES_USER: atsd
           POSTGRES_PASSWORD: atsd
           POSTGRES_DB: atsd_test
-        # Definimos chequeos para esperar hasta que postgres ya ha comenzado
+        # Definimos chequeos 
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
