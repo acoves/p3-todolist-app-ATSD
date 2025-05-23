@@ -95,23 +95,10 @@ public class EquipoService {
         List<EquipoData> equiposData = equipos.stream()
                 .map(equipo -> modelMapper.map(equipo, EquipoData.class))
                 .collect(Collectors.toList());
-
+        
         // ordenamos la lista por nombre del equipo
         Collections.sort(equiposData, (a, b) -> a.getNombre().compareTo(b.getNombre()));
         return equiposData;
-    }
-
-    @Transactional
-    public List<UsuarioData> usuariosEquipo(Long id) {
-        // recuperamos el equipo
-        Equipo equipo = equipoRepository.findById(id).orElse(null);
-        if (equipo == null) return new ArrayList<>();
-
-        // cambiamos el tipo de la lista de usuarios
-        List<UsuarioData> usuarios = equipo.getUsuarios().stream()
-                .map(usuario -> modelMapper.map(usuario, UsuarioData.class))
-                .collect(Collectors.toList());
-        return usuarios;
     }
 
     @Transactional
@@ -136,4 +123,31 @@ public class EquipoService {
         usuarioRepository.save(usuario);
         // con ello se guarda la relación
     }
+
+    @Transactional
+    public List<UsuarioData> usuariosEquipo(Long idEquipo) {
+        // recuperamos el equipo
+        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
+        if (equipo == null) return new ArrayList<>();
+
+        // cambiamos el tipo de la lista de usuarios
+        List<UsuarioData> usuarios = equipo.getUsuarios().stream()
+                .map(usuario -> modelMapper.map(usuario, UsuarioData.class))
+                .collect(Collectors.toList());
+        return usuarios;
+    }
+
+    @Transactional
+    public List<EquipoData> equiposUsuario(long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        if (usuario == null) return new ArrayList<>();
+
+        // cambiamos el tipo de la lista de equipos
+        List<EquipoData> equipos = usuario.getEquipos().stream()
+                .map(equipo -> modelMapper.map(equipo, EquipoData.class))
+                .collect(Collectors.toList());
+        return equipos;
+
+    }
 }
+
