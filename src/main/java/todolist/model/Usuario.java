@@ -25,24 +25,31 @@ public class Usuario implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
 
-    // La relación es lazy por defecto,
-    // es necesario acceder a la lista de tareas para que se carguen
+    // Campo para administrador (valor por defecto: false)
+    @Column(name = "admin")
+    private boolean admin = false;
+
+    // Campo para habilitado (valor por defecto: true)
+    @Column(name = "enabled")
+    private boolean enabled = true;
+
+    // Relación OneToMany con Tarea, lazy por defecto
     @OneToMany(mappedBy = "usuario")
     Set<Tarea> tareas = new HashSet<>();
 
+    // Relación ManyToMany con Equipo
     @ManyToMany(mappedBy = "usuarios")
     Set<Equipo> equipos = new HashSet<>();
 
-    // Constructor vacío necesario para JPA/Hibernate.
-    // No debe usarse desde la aplicación.
+    // Constructor vacío necesario para JPA/Hibernate
     public Usuario() {}
 
-    // Constructor público con los atributos obligatorios. En este caso el correo electrónico.
+    // Constructor público con el email
     public Usuario(String email) {
         this.email = email;
     }
 
-    // Getters y setters atributos básicos
+    // Getters y setters para todos los campos
 
     public Long getId() {
         return id;
@@ -84,7 +91,23 @@ public class Usuario implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    // Getters y setters de la relación
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    // Getters para las relaciones
 
     public Set<Tarea> getTareas() {
         return tareas;
@@ -94,33 +117,28 @@ public class Usuario implements Serializable {
         return equipos;
     }
 
-    // Método helper para añadir una tarea a la lista y establecer la relación inversa
+    // Método helper para añadir una tarea
     public void addTarea(Tarea tarea) {
-        // Si la tarea ya está en la lista, no la añadimos
         if (tareas.contains(tarea)) return;
-        // Añadimos la tarea a la lista
         tareas.add(tarea);
-        // Establecemos la relación inversa del usuario en la tarea
         if (tarea.getUsuario() != this) {
             tarea.setUsuario(this);
         }
     }
 
+    // Métodos equals y hashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
         if (id != null && usuario.id != null)
-            // Si tenemos los ID, comparamos por ID
             return Objects.equals(id, usuario.id);
-        // si no comparamos por campos obligatorios
         return email.equals(usuario.email);
     }
 
     @Override
     public int hashCode() {
-        // Generamos un hash basado en los campos obligatorios
         return Objects.hash(email);
     }
 }
