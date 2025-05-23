@@ -81,7 +81,8 @@ public class EquipoService {
     @Transactional
     public EquipoData recuperarEquipo(Long id) {
         Equipo equipo = equipoRepository.findById(id).orElse(null);
-
+        if (equipo == null)
+            throw new EquipoServiceException("El equipo no existe");
         return modelMapper.map(equipo, EquipoData.class);
     }
 
@@ -128,7 +129,8 @@ public class EquipoService {
     public List<UsuarioData> usuariosEquipo(Long idEquipo) {
         // recuperamos el equipo
         Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
-        if (equipo == null) return new ArrayList<>();
+        if (equipo == null)
+            throw new EquipoServiceException("El equipo no existe");
 
         // cambiamos el tipo de la lista de usuarios
         List<UsuarioData> usuarios = equipo.getUsuarios().stream()
@@ -140,7 +142,8 @@ public class EquipoService {
     @Transactional
     public List<EquipoData> equiposUsuario(long idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
-        if (usuario == null) return new ArrayList<>();
+        if (usuario == null)
+            throw new EquipoServiceException("El usuario no existe");
 
         // cambiamos el tipo de la lista de equipos
         List<EquipoData> equipos = usuario.getEquipos().stream()
