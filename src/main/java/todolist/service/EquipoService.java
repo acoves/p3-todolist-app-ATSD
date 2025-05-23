@@ -95,7 +95,7 @@ public class EquipoService {
         List<EquipoData> equiposData = equipos.stream()
                 .map(equipo -> modelMapper.map(equipo, EquipoData.class))
                 .collect(Collectors.toList());
-        
+
         // ordenamos la lista por nombre del equipo
         Collections.sort(equiposData, (a, b) -> a.getNombre().compareTo(b.getNombre()));
         return equiposData;
@@ -137,4 +137,3 @@ public class EquipoService {
         // con ello se guarda la relación
     }
 }
-
