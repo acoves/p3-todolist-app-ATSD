@@ -25,27 +25,31 @@ public class Usuario implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
 
-    // Nuevo campo para administrador (valor por defecto: false)
+    // Campo para administrador (valor por defecto: false)
     @Column(name = "admin")
     private boolean admin = false;
 
+    // Campo para habilitado (valor por defecto: true)
     @Column(name = "enabled")
     private boolean enabled = true;
 
-    // La relación es lazy por defecto,
-    // es necesario acceder a la lista de tareas para que se carguen
+    // Relación OneToMany con Tarea, lazy por defecto
     @OneToMany(mappedBy = "usuario")
     Set<Tarea> tareas = new HashSet<>();
 
-    // Constructor vacío necesario para JPA/Hibernate.
+    // Relación ManyToMany con Equipo
+    @ManyToMany(mappedBy = "usuarios")
+    Set<Equipo> equipos = new HashSet<>();
+
+    // Constructor vacío necesario para JPA/Hibernate
     public Usuario() {}
 
-    // Constructor público con el email (admin no se incluye, se asigna por defecto como false)
+    // Constructor público con el email
     public Usuario(String email) {
         this.email = email;
     }
 
-    // Getters y setters (incluyendo los nuevos campos admin y enabled)
+    // Getters y setters para todos los campos
 
     public Long getId() {
         return id;
@@ -87,7 +91,6 @@ public class Usuario implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    // Getter y setter para el campo admin
     public boolean isAdmin() {
         return admin;
     }
@@ -96,7 +99,6 @@ public class Usuario implements Serializable {
         this.admin = admin;
     }
 
-    // Getter y setter para el campo enabled
     public boolean isEnabled() {
         return enabled;
     }
@@ -105,12 +107,17 @@ public class Usuario implements Serializable {
         this.enabled = enabled;
     }
 
-    // Getters y setters de la relación con Tarea
+    // Getters para las relaciones
 
     public Set<Tarea> getTareas() {
         return tareas;
     }
 
+    public Set<Equipo> getEquipos() {
+        return equipos;
+    }
+
+    // Método helper para añadir una tarea
     public void addTarea(Tarea tarea) {
         if (tareas.contains(tarea)) return;
         tareas.add(tarea);
@@ -119,6 +126,7 @@ public class Usuario implements Serializable {
         }
     }
 
+    // Métodos equals y hashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
