@@ -34,17 +34,14 @@ public class EquipoServiceTest {
 
     @Test
     public void listadoEquiposOrdenAlfabetico() {
-        // GIVEN
-        // Dos equipos en la base de datos
+
         equipoService.crearEquipo("Proyecto BBB");
         equipoService.crearEquipo("Proyecto AAA");
 
-        // WHEN
-        // Recuperamos los equipos
+
         List<EquipoData> equipos = equipoService.findAllOrdenadoPorNombre();
 
-        // THEN
-        // Los equipos están ordenados por nombre
+
         assertThat(equipos).hasSize(2);
         assertThat(equipos.get(0).getNombre()).isEqualTo("Proyecto AAA");
         assertThat(equipos.get(1).getNombre()).isEqualTo("Proyecto BBB");
@@ -52,20 +49,17 @@ public class EquipoServiceTest {
 
     @Test
     public void añadirUsuarioAEquipoTest() {
-        // GIVEN
-        // Un usuario y un equipo en la base de datos
+
         UsuarioData usuario = new UsuarioData();
         usuario.setEmail("user@umh");
         usuario.setPassword("1234");
         usuario = usuarioService.registrar(usuario);
         EquipoData equipo = equipoService.crearEquipo("Proyecto 1");
 
-        // WHEN
-        // Añadimos el usuario al equipo
+
         equipoService.añadirUsuarioAEquipo(equipo.getId(), usuario.getId());
 
-        // THEN
-        // El usuario pertenece al equipo
+
         List<UsuarioData> usuarios = equipoService.usuariosEquipo(equipo.getId());
         assertThat(usuarios).hasSize(1);
         assertThat(usuarios.get(0).getEmail()).isEqualTo("user@umh");
@@ -73,8 +67,7 @@ public class EquipoServiceTest {
 
     @Test
     public void recuperarEquiposDeUsuario() {
-        // GIVEN
-        // Un usuario y dos equipos en la base de datos
+
         UsuarioData usuario = new UsuarioData();
         usuario.setEmail("user@umh");
         usuario.setPassword("1234");
@@ -84,20 +77,16 @@ public class EquipoServiceTest {
         equipoService.añadirUsuarioAEquipo(equipo1.getId(), usuario.getId());
         equipoService.añadirUsuarioAEquipo(equipo2.getId(), usuario.getId());
 
-        // WHEN
-        // Recuperamos los equipos del usuario
+
         List<EquipoData> equipos = equipoService.equiposUsuario(usuario.getId());
 
-        // THEN
-        // El usuario pertenece a los dos equipos
         assertThat(equipos).hasSize(2);
         assertThat(equipos.get(0).getNombre()).isEqualTo("Project 1");
         assertThat(equipos.get(1).getNombre()).isEqualTo("Project 2");
     }
     @Test
     public void comprobarExcepciones() {
-        // Comprobamos las excepciones lanzadas por los métodos
-        // recuperarEquipo, añadirUsuarioAEquipo, usuariosEquipo y equiposUsuario
+
         assertThatThrownBy(() -> equipoService.recuperarEquipo(1L))
                 .isInstanceOf(EquipoServiceException.class);
         assertThatThrownBy(() -> equipoService.añadirUsuarioAEquipo(1L, 1L))
@@ -107,11 +96,24 @@ public class EquipoServiceTest {
         assertThatThrownBy(() -> equipoService.equiposUsuario(1L))
                 .isInstanceOf(EquipoServiceException.class);
 
-        // Creamos un equipo pero no un usuario
-        // y comprobamos que también se lanza una excepción
         EquipoData equipo = equipoService.crearEquipo("Project 1");
         assertThatThrownBy(() -> equipoService.añadirUsuarioAEquipo(equipo.getId(), 1L))
                 .isInstanceOf(EquipoServiceException.class);
+    }
+
+    @Test
+    public void eliminarUsuarioDeEquipoTest() {
+        UsuarioData usuarioData = new UsuarioData();
+        usuarioData.setEmail("user@umh");
+        usuarioData.setPassword("1234");
+        UsuarioData usuario = usuarioService.registrar(usuarioData);
+        EquipoData equipo = equipoService.crearEquipo("Project X");
+        equipoService.añadirUsuarioAEquipo(equipo.getId(), usuario.getId());
+
+        equipoService.eliminarUsuarioDeEquipo(equipo.getId(), usuario.getId());
+
+        List<UsuarioData> usuarios = equipoService.usuariosEquipo(equipo.getId());
+        assertThat(usuarios).isEmpty();
     }
 
 }
