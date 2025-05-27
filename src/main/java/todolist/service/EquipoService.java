@@ -65,7 +65,7 @@ public class EquipoService {
         Optional<Equipo> equipoBD = equipoRepository.findByNombre(nombre);
         if (equipoBD.isPresent())
             throw new EquipoServiceException("El equipo " + nombre + " ya está registrado");
-        else if (nombre == null || nombre.trim().isEmpty())
+        else if (nombre == null)
             throw new EquipoServiceException("El equipo no tiene nombre");
         else {
             Equipo equipoNuevo = modelMapper.map(new Equipo(), Equipo.class);
@@ -138,6 +138,24 @@ public class EquipoService {
                 .collect(Collectors.toList());
         return equipos;
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<UsuarioData> findAllUsuariosNoEnEquipo(Long equipoId) {
+        Equipo equipo = equipoRepository.findById(equipoId)
+                .orElseThrow(() -> new EquipoServiceException("Equipo no encontrado"));
+
+        Iterable<Usuario> usuariosIterable = usuarioRepository.findAll();
+        List<Usuario> todosUsuarios = new ArrayList<>();
+        usuariosIterable.forEach(todosUsuarios::add);
+
+        List<Usuario> usuariosNoEnEquipo = todosUsuarios.stream()
+                .filter(usuario -> !equipo.getUsuarios().contains(usuario))
+                .collect(Collectors.toList());
+
+        return usuariosNoEnEquipo.stream()
+                .map(usuario -> modelMapper.map(usuario, UsuarioData.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional
