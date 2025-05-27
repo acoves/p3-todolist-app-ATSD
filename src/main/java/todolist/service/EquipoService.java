@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -98,11 +95,11 @@ public class EquipoService {
     }
 
     @Transactional
-    public void añadirUsuarioAEquipo(Long idEquipo, Long idUsuario) {
-        Equipo equipo = equipoRepository.findById(idEquipo)
+    public void añadirUsuarioAEquipo(Long equipoId, Long usuarioId) {
+        Equipo equipo = equipoRepository.findById(equipoId)
                 .orElseThrow(() -> new EquipoServiceException("El equipo no existe"));
 
-        Usuario usuario = usuarioRepository.findById(idUsuario)
+        Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new EquipoServiceException("El usuario no existe"));
 
         if (equipo.getUsuarios().contains(usuario)) {
@@ -117,14 +114,13 @@ public class EquipoService {
 
     @Transactional
     public List<UsuarioData> usuariosEquipo(Long idEquipo) {
-        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
-        if (equipo == null)
-            throw new EquipoServiceException("El equipo no existe");
+        Equipo equipo = equipoRepository.findById(idEquipo)
+                .orElseThrow(() -> new EquipoServiceException("El equipo no existe"));
 
-        List<UsuarioData> usuarios = equipo.getUsuarios().stream()
+        return equipo.getUsuarios().stream()
+                .sorted(Comparator.comparing(Usuario::getNombre))
                 .map(usuario -> modelMapper.map(usuario, UsuarioData.class))
                 .collect(Collectors.toList());
-        return usuarios;
     }
 
     @Transactional
