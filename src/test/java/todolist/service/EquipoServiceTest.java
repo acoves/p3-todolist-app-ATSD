@@ -137,4 +137,20 @@ public class EquipoServiceTest {
         assertThatThrownBy(() -> equipoService.añadirUsuarioAEquipo(equipo.getId(), usuario.getId()))
                 .isInstanceOf(EquipoServiceException.class);
     }
+
+    @Test
+    public void crearEquipoConNombreVacioTest() {
+        // Nombre vacío
+        assertThatThrownBy(() -> equipoService.crearEquipo(""))
+                .isInstanceOf(EquipoServiceException.class);
+
+        // Nombre con espacios
+        assertThatThrownBy(() -> equipoService.crearEquipo("   "))
+                .isInstanceOf(EquipoServiceException.class);
+
+        // Nombre nulo
+        assertThatThrownBy(() -> equipoService.crearEquipo(null))
+                .isInstanceOf(EquipoServiceException.class);
+    }
+
 }

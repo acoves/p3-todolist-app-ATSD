@@ -65,7 +65,7 @@ public class EquipoService {
         Optional<Equipo> equipoBD = equipoRepository.findByNombre(nombre);
         if (equipoBD.isPresent())
             throw new EquipoServiceException("El equipo " + nombre + " ya está registrado");
-        else if (nombre == null)
+        else if (nombre == null || nombre.trim().isEmpty())
             throw new EquipoServiceException("El equipo no tiene nombre");
         else {
             Equipo equipoNuevo = modelMapper.map(new Equipo(), Equipo.class);
