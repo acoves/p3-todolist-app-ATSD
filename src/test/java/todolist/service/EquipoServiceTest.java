@@ -116,4 +116,12 @@ public class EquipoServiceTest {
         assertThat(usuarios).isEmpty();
     }
 
+    @Test
+    public void eliminarUsuarioInexistenteDeEquipoTest() {
+        EquipoData equipo = equipoService.crearEquipo("Project Y");
+
+        assertThatThrownBy(() -> equipoService.eliminarUsuarioDeEquipo(equipo.getId(), 999L))
+                .isInstanceOf(EquipoServiceException.class);
+    }
+
 }
