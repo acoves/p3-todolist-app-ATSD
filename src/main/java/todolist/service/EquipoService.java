@@ -162,4 +162,12 @@ public class EquipoService {
         equipo.setNombre(nuevoNombre);
         equipoRepository.save(equipo);
     }
+
+    @Transactional
+    public void eliminarEquipo(Long equipoId) {
+        Equipo equipo = equipoRepository.findById(equipoId)
+                .orElseThrow(() -> new EquipoServiceException("Equipo no encontrado"));
+        equipo.getUsuarios().forEach(usuario -> usuario.getEquipos().remove(equipo));
+        equipoRepository.delete(equipo);
+    }
 }
