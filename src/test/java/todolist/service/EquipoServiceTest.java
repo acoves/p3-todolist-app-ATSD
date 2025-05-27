@@ -138,6 +138,15 @@ public class EquipoServiceTest {
                 .isInstanceOf(EquipoServiceException.class);
     }
 
+    @Test
+    public void renombrarEquipoTest() {
+        EquipoData equipo = equipoService.crearEquipo("Old Name");
+
+        equipoService.renombrarEquipo(equipo.getId(), "New Name");
+
+        EquipoData updatedEquipo = equipoService.recuperarEquipo(equipo.getId());
+        assertThat(updatedEquipo.getNombre()).isEqualTo("New Name");
+    }
 
 
 }
