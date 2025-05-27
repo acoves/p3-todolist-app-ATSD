@@ -3,7 +3,9 @@ package todolist.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import todolist.authentication.ManagerUserSession;
 import todolist.dto.EquipoData;
 import todolist.dto.UsuarioData;
@@ -27,14 +29,10 @@ public class TeamsController {
         this.usuarioService = usuarioService;
     }
 
-    // Método listTeams ORIGINAL (sin cambios)
     @GetMapping("/teams")
     public String listTeams(Model model) {
         Long usuarioId = managerUserSession.usuarioLogeado();
-
-        if (usuarioId == null) {
-            return "redirect:/login";
-        }
+        if (usuarioId == null) return "redirect:/login";
 
         try {
             UsuarioData usuarioLogeado = usuarioService.findById(usuarioId);
@@ -48,42 +46,75 @@ public class TeamsController {
             return "teamsList";
 
         } catch (RuntimeException e) {
+            UsuarioData usuarioLogeado = usuarioService.findById(usuarioId);
             model.addAttribute("error", "Error al cargar equipos: " + e.getMessage());
             model.addAttribute("loggedIn", true);
-            model.addAttribute("usuarioLogeado", usuarioService.findById(usuarioId));
-            model.addAttribute("usuario", usuarioService.findById(usuarioId));
+            model.addAttribute("usuarioLogeado", usuarioLogeado);
+            model.addAttribute("usuario", usuarioLogeado);
             return "teamsList";
         }
     }
 
-    // Método listTeamMembers ORIGINAL (solo añadidos mínimos para navbar)
     @GetMapping("/teams/{teamId}/members")
     public String listTeamMembers(@PathVariable Long teamId, Model model) {
         Long usuarioId = managerUserSession.usuarioLogeado();
-
-        if (usuarioId == null) {
-            return "redirect:/login";
-        }
+        if (usuarioId == null) return "redirect:/login";
 
         try {
-            UsuarioData usuario = usuarioService.findById(usuarioId);
+            UsuarioData usuarioLogeado = usuarioService.findById(usuarioId);
             EquipoData equipo = equipoService.recuperarEquipo(teamId);
             List<UsuarioData> miembros = equipoService.usuariosEquipo(teamId);
 
             model.addAttribute("equipo", equipo);
             model.addAttribute("miembros", miembros != null ? miembros : Collections.emptyList());
             model.addAttribute("loggedIn", true);
-            model.addAttribute("usuarioLogeado", usuario);
-            model.addAttribute("usuario", usuario);
+            model.addAttribute("usuarioLogeado", usuarioLogeado);
+            model.addAttribute("usuario", usuarioLogeado);
 
             return "teamDetails";
 
         } catch (RuntimeException e) {
+            UsuarioData usuarioLogeado = usuarioService.findById(usuarioId);
+            model.addAttribute("equipo", null);
             model.addAttribute("error", "Error al cargar miembros: " + e.getMessage());
             model.addAttribute("loggedIn", true);
-            model.addAttribute("usuarioLogeado", usuarioService.findById(usuarioId));
-            model.addAttribute("usuario", usuarioService.findById(usuarioId));
+            model.addAttribute("usuarioLogeado", usuarioLogeado);
+            model.addAttribute("usuario", usuarioLogeado);
             return "teamDetails";
+        }
+    }
+
+    @PostMapping("/teams/{teamId}/add-user")
+    public String añadirUsuarioAlEquipo(
+            @PathVariable("teamId") Long teamId,
+            RedirectAttributes redirectAttributes) {
+
+        Long usuarioLogeadoId = managerUserSession.usuarioLogeado();
+        if (usuarioLogeadoId == null) return "redirect:/login";
+
+        try {
+            equipoService.añadirUsuarioAEquipo(teamId, usuarioLogeadoId);
+            return "redirect:/teams/" + teamId + "/members";
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/teams/" + teamId + "/members";
+        }
+    }
+
+    @PostMapping("/teams/{teamId}/remove-user")
+    public String eliminarUsuarioDelEquipo(
+            @PathVariable("teamId") Long teamId,
+            RedirectAttributes redirectAttributes) {
+
+        Long usuarioLogeadoId = managerUserSession.usuarioLogeado();
+        if (usuarioLogeadoId == null) return "redirect:/login";
+
+        try {
+            equipoService.eliminarUsuarioDeEquipo(teamId, usuarioLogeadoId);
+            return "redirect:/teams/" + teamId + "/members";
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/teams/" + teamId + "/members";
         }
     }
 }
