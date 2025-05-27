@@ -34,7 +34,6 @@ public class EquipoServiceTest {
 
     @Test
     public void listadoEquiposOrdenAlfabetico() {
-
         equipoService.crearEquipo("Proyecto BBB");
         equipoService.crearEquipo("Proyecto AAA");
 
@@ -80,12 +79,14 @@ public class EquipoServiceTest {
 
         List<EquipoData> equipos = equipoService.equiposUsuario(usuario.getId());
 
+
         assertThat(equipos).hasSize(2);
         assertThat(equipos.get(0).getNombre()).isEqualTo("Project 1");
         assertThat(equipos.get(1).getNombre()).isEqualTo("Project 2");
     }
     @Test
     public void comprobarExcepciones() {
+
         assertThatThrownBy(() -> equipoService.recuperarEquipo(1L))
                 .isInstanceOf(EquipoServiceException.class);
         assertThatThrownBy(() -> equipoService.añadirUsuarioAEquipo(1L, 1L))
@@ -138,6 +139,23 @@ public class EquipoServiceTest {
                 .isInstanceOf(EquipoServiceException.class);
     }
 
+    @Test
+    public void renombrarEquipoTest() {
+        EquipoData equipo = equipoService.crearEquipo("Old Name");
 
+        equipoService.renombrarEquipo(equipo.getId(), "New Name");
 
+        EquipoData updatedEquipo = equipoService.recuperarEquipo(equipo.getId());
+        assertThat(updatedEquipo.getNombre()).isEqualTo("New Name");
+    }
+
+    @Test
+    public void eliminarEquipoTest() {
+        EquipoData equipo = equipoService.crearEquipo("Team to Delete");
+
+        equipoService.eliminarEquipo(equipo.getId());
+
+        assertThatThrownBy(() -> equipoService.recuperarEquipo(equipo.getId()))
+                .isInstanceOf(EquipoServiceException.class);
+    }
 }
