@@ -27,6 +27,7 @@ public class EquipoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+
     @Transactional
     public EquipoData registrar(EquipoData equipo) {
         Optional<Equipo> equipoBD = equipoRepository.findByNombre(equipo.getNombre());
@@ -98,16 +99,18 @@ public class EquipoService {
 
     @Transactional
     public void añadirUsuarioAEquipo(Long idEquipo, Long idUsuario) {
-        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
-        if (equipo == null) throw new EquipoServiceException("El equipo no existe");
+        Equipo equipo = equipoRepository.findById(idEquipo)
+                .orElseThrow(() -> new EquipoServiceException("El equipo no existe"));
 
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
-        if (usuario == null) throw new EquipoServiceException("El usuario no existe");
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new EquipoServiceException("El usuario no existe"));
 
-        if (equipo.getUsuarios().contains(usuario))
+        if (equipo.getUsuarios().contains(usuario)) {
             throw new EquipoServiceException("El usuario ya pertenece al equipo");
+        }
 
         equipo.addUsuario(usuario);
+
         equipoRepository.save(equipo);
         usuarioRepository.save(usuario);
     }

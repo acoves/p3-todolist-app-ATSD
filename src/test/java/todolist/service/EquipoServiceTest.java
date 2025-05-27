@@ -86,7 +86,6 @@ public class EquipoServiceTest {
     }
     @Test
     public void comprobarExcepciones() {
-
         assertThatThrownBy(() -> equipoService.recuperarEquipo(1L))
                 .isInstanceOf(EquipoServiceException.class);
         assertThatThrownBy(() -> equipoService.añadirUsuarioAEquipo(1L, 1L))
@@ -95,6 +94,7 @@ public class EquipoServiceTest {
                 .isInstanceOf(EquipoServiceException.class);
         assertThatThrownBy(() -> equipoService.equiposUsuario(1L))
                 .isInstanceOf(EquipoServiceException.class);
+
 
         EquipoData equipo = equipoService.crearEquipo("Project 1");
         assertThatThrownBy(() -> equipoService.añadirUsuarioAEquipo(equipo.getId(), 1L))
@@ -124,4 +124,17 @@ public class EquipoServiceTest {
                 .isInstanceOf(EquipoServiceException.class);
     }
 
+    @Test
+    public void añadirUsuarioDuplicadoAEquipoTest() {
+        UsuarioData usuarioData = new UsuarioData();
+        usuarioData.setEmail("user2@umh");
+        usuarioData.setPassword("5678");
+        UsuarioData usuario = usuarioService.registrar(usuarioData);
+
+        EquipoData equipo = equipoService.crearEquipo("Project Z");
+        equipoService.añadirUsuarioAEquipo(equipo.getId(), usuario.getId());
+
+        assertThatThrownBy(() -> equipoService.añadirUsuarioAEquipo(equipo.getId(), usuario.getId()))
+                .isInstanceOf(EquipoServiceException.class);
+    }
 }
