@@ -27,9 +27,7 @@ public class EquipoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // Se añade un equipo en la aplicación.
-    // El nombre debe ser distinto de null
-    // El nombre no debe estar registrado en la base de datos
+
     @Transactional
     public EquipoData registrar(EquipoData equipo) {
         Optional<Equipo> equipoBD = equipoRepository.findByNombre(equipo.getNombre());
@@ -67,7 +65,7 @@ public class EquipoService {
         Optional<Equipo> equipoBD = equipoRepository.findByNombre(nombre);
         if (equipoBD.isPresent())
             throw new EquipoServiceException("El equipo " + nombre + " ya está registrado");
-        else if (nombre == null)
+        else if (nombre == null || nombre.trim().isEmpty())
             throw new EquipoServiceException("El equipo no tiene nombre");
         else {
             Equipo equipoNuevo = modelMapper.map(new Equipo(), Equipo.class);
@@ -88,51 +86,41 @@ public class EquipoService {
 
     @Transactional
     public List<EquipoData> findAllOrdenadoPorNombre() {
-        // recuperamos todos los equipos
         List<Equipo> equipos;
         equipos = equipoRepository.findAll();
 
-        // cambiamos el tipo de la lista de equipos
         List<EquipoData> equiposData = equipos.stream()
                 .map(equipo -> modelMapper.map(equipo, EquipoData.class))
                 .collect(Collectors.toList());
-        
-        // ordenamos la lista por nombre del equipo
+
         Collections.sort(equiposData, (a, b) -> a.getNombre().compareTo(b.getNombre()));
         return equiposData;
     }
 
     @Transactional
     public void añadirUsuarioAEquipo(Long idEquipo, Long idUsuario) {
-        // recuperamos el equipo
-        Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
-        if (equipo == null) throw new EquipoServiceException("El equipo no existe");
+        Equipo equipo = equipoRepository.findById(idEquipo)
+                .orElseThrow(() -> new EquipoServiceException("El equipo no existe"));
 
-        // recuperamos el usuario
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
-        if (usuario == null) throw new EquipoServiceException("El usuario no existe");
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new EquipoServiceException("El usuario no existe"));
 
-        // comprobamos que el usuario no pertenece al equipo
-        if (equipo.getUsuarios().contains(usuario))
+        if (equipo.getUsuarios().contains(usuario)) {
             throw new EquipoServiceException("El usuario ya pertenece al equipo");
+        }
 
-        // añadimos el usuario al equipo
         equipo.addUsuario(usuario);
-        // guardamos el equipo
+
         equipoRepository.save(equipo);
-        // guardamos el usuario
         usuarioRepository.save(usuario);
-        // con ello se guarda la relación
     }
 
     @Transactional
     public List<UsuarioData> usuariosEquipo(Long idEquipo) {
-        // recuperamos el equipo
         Equipo equipo = equipoRepository.findById(idEquipo).orElse(null);
         if (equipo == null)
             throw new EquipoServiceException("El equipo no existe");
 
-        // cambiamos el tipo de la lista de usuarios
         List<UsuarioData> usuarios = equipo.getUsuarios().stream()
                 .map(usuario -> modelMapper.map(usuario, UsuarioData.class))
                 .collect(Collectors.toList());
@@ -145,12 +133,21 @@ public class EquipoService {
         if (usuario == null)
             throw new EquipoServiceException("El usuario no existe");
 
-        // cambiamos el tipo de la lista de equipos
         List<EquipoData> equipos = usuario.getEquipos().stream()
                 .map(equipo -> modelMapper.map(equipo, EquipoData.class))
                 .collect(Collectors.toList());
         return equipos;
 
     }
-}
 
+    @Transactional
+    public void eliminarUsuarioDeEquipo(Long equipoId, Long usuarioId) {
+        Equipo equipo = equipoRepository.findById(equipoId)
+                .orElseThrow(() -> new EquipoServiceException("Equipo no encontrado"));
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new EquipoServiceException("Usuario no encontrado"));
+
+        equipo.getUsuarios().remove(usuario);
+        usuario.getEquipos().remove(equipo);
+    }
+}
