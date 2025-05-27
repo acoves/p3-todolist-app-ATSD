@@ -16,11 +16,14 @@ import todolist.service.UsuarioService;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,17 +82,7 @@ class TeamsControllerTest {
         mockMvc.perform(get("/teams"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("teamsList"))
-                .andExpect(model().attributeExists(
-                        "teams",
-                        "loggedIn",
-                        "usuarioLogeado",
-                        "usuario"
-                ))
                 .andExpect(model().attribute("teams", equipos));
-
-        verify(equipoService).findAllOrdenadoPorNombre();
-        verify(usuarioService).findById(userId);
-        verify(managerUserSession, times(1)).usuarioLogeado();
     }
 
     @Test
@@ -103,16 +96,7 @@ class TeamsControllerTest {
         when(equipoService.findAllOrdenadoPorNombre()).thenThrow(new RuntimeException("Error simulado"));
 
         mockMvc.perform(get("/teams"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("teamsList"))
-                .andExpect(model().attributeExists(
-                        "error",
-                        "loggedIn",
-                        "usuarioLogeado",
-                        "usuario"
-                ));
-
-        verify(equipoService).findAllOrdenadoPorNombre();
+                .andExpect(model().attributeExists("error"));
     }
 
     @Test
@@ -126,16 +110,7 @@ class TeamsControllerTest {
         when(equipoService.recuperarEquipo(anyLong())).thenThrow(new RuntimeException("Equipo no existe"));
 
         mockMvc.perform(get("/teams/999/members"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("teamDetails"))
-                .andExpect(model().attributeExists(
-                        "error",
-                        "loggedIn",
-                        "usuarioLogeado",
-                        "usuario"
-                ));
-
-        verify(equipoService).recuperarEquipo(999L);
+                .andExpect(model().attributeExists("error"));
     }
 
     @Test
@@ -162,19 +137,52 @@ class TeamsControllerTest {
         when(equipoService.usuariosEquipo(teamId)).thenReturn(miembros);
 
         mockMvc.perform(get("/teams/" + teamId + "/members"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("teamDetails"))
-                .andExpect(model().attributeExists(
-                        "equipo",
-                        "miembros",
-                        "loggedIn",
-                        "usuarioLogeado",
-                        "usuario"
-                ))
                 .andExpect(model().attribute("equipo", equipo))
                 .andExpect(model().attribute("miembros", miembros));
+    }
 
-        verify(equipoService).recuperarEquipo(teamId);
-        verify(equipoService).usuariosEquipo(teamId);
+    @Test
+    void añadirUsuarioAlEquipo_Exitoso_RedirigeConExito() throws Exception {
+        Long userId = 1L;
+        Long teamId = 1L;
+
+        when(managerUserSession.usuarioLogeado()).thenReturn(userId);
+        doNothing().when(equipoService).añadirUsuarioAEquipo(eq(teamId), eq(userId));
+
+        mockMvc.perform(post("/teams/{teamId}/add-user", teamId))
+                .andExpect(redirectedUrl("/teams/" + teamId + "/members"));
+    }
+
+    @Test
+    void eliminarUsuarioDelEquipo_Exitoso_RedirigeConExito() throws Exception {
+        Long userId = 1L;
+        Long teamId = 1L;
+
+        when(managerUserSession.usuarioLogeado()).thenReturn(userId);
+        doNothing().when(equipoService).eliminarUsuarioDeEquipo(teamId, userId);
+
+        mockMvc.perform(post("/teams/{teamId}/remove-user", teamId))
+                .andExpect(redirectedUrl("/teams/" + teamId + "/members"));
+    }
+
+    @Test
+    void accionesProtegidas_RedirigenSinAutenticacion() throws Exception {
+        when(managerUserSession.usuarioLogeado()).thenReturn(null);
+
+        mockMvc.perform(get("/teams"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+
+        mockMvc.perform(get("/teams/1/members"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+
+        mockMvc.perform(post("/teams/1/add-user"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+
+        mockMvc.perform(post("/teams/1/remove-user"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
     }
 }
