@@ -12,6 +12,8 @@ import todolist.dto.EquipoData;
 import todolist.dto.UsuarioData;
 import todolist.service.EquipoService;
 import todolist.service.UsuarioService;
+
+import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,17 +44,16 @@ public class TeamsController {
             model.addAttribute("teams", teams != null ? teams : Collections.emptyList());
             model.addAttribute("loggedIn", true);
             model.addAttribute("usuarioLogeado", usuarioLogeado);
-            model.addAttribute("usuario", usuarioLogeado); // <-- Añadir si se usa en la vista
+            model.addAttribute("usuario", usuarioLogeado);
 
             return "teamsList";
 
         } catch (RuntimeException e) {
-            // Añadir usuarioLogeado incluso en caso de error
-            UsuarioData usuarioLogeado = usuarioService.findById(usuarioId); // <-- Recuperar el usuario
+            UsuarioData usuarioLogeado = usuarioService.findById(usuarioId);
             model.addAttribute("error", "Error al cargar equipos: " + e.getMessage());
             model.addAttribute("loggedIn", true);
             model.addAttribute("usuarioLogeado", usuarioLogeado);
-            model.addAttribute("usuario", usuarioLogeado); // <-- Añadir si se usa en la vista
+            model.addAttribute("usuario", usuarioLogeado);
             return "teamsList";
         }
     }
@@ -63,7 +64,6 @@ public class TeamsController {
         if (usuarioId == null) return "redirect:/login";
 
         try {
-            // Cambiar el nombre de la variable para que coincida con el fragmento
             UsuarioData usuarioLogeado = usuarioService.findById(usuarioId);
             EquipoData equipo = equipoService.recuperarEquipo(teamId);
             List<UsuarioData> miembros = equipoService.usuariosEquipo(teamId);
@@ -122,42 +122,51 @@ public class TeamsController {
     }
 
     @GetMapping("/teams/{teamId}/edit")
-    public String mostrarFormularioEdicion(@PathVariable Long teamId, Model model) {
-        Long usuarioId = managerUserSession.usuarioLogeado();
-        if (usuarioId == null) return "redirect:/login";
+    public String mostrarFormularioEdicion(@PathVariable Long teamId,
+                                           Model model,
+                                           HttpSession session) {
 
-        // Validar si es admin
+        Long usuarioId = managerUserSession.usuarioLogeado();
+        if (usuarioId == null) {
+            return "redirect:/login";
+        }
+
         if (!usuarioService.isAdmin(usuarioId)) {
-            return "redirect:/teams?error=Acceso no autorizado";
+            return "redirect:/teams?error=Acceso no autorizado para edición";
         }
 
         try {
             EquipoData equipo = equipoService.recuperarEquipo(teamId);
+            UsuarioData usuarioLogeado = usuarioService.findById(usuarioId);
+
             model.addAttribute("equipo", equipo);
+            model.addAttribute("usuario", usuarioLogeado);
             model.addAttribute("loggedIn", true);
-            model.addAttribute("usuarioLogeado", usuarioService.findById(usuarioId));
+
             return "editTeam";
+
         } catch (RuntimeException e) {
-            return "redirect:/teams?error=" + e.getMessage();
+            return "redirect:/teams?error=Error al cargar el equipo: " + e.getMessage();
         }
     }
 
     @PostMapping("/teams/{teamId}/edit")
     public String editarEquipo(
-            @PathVariable Long teamId,
-            @RequestParam("nombre") String nombre,
-            RedirectAttributes redirectAttributes) {
-
+            @PathVariable("teamId") Long teamId,
+            @RequestParam("nombre") String nuevoNombre,
+            RedirectAttributes redirectAttributes
+    ) {
         Long usuarioId = managerUserSession.usuarioLogeado();
+
         if (usuarioId == null || !usuarioService.isAdmin(usuarioId)) {
             return "redirect:/teams?error=Acceso no autorizado";
         }
 
         try {
-            equipoService.renombrarEquipo(teamId, nombre);
+            equipoService.renombrarEquipo(teamId, nuevoNombre);
             return "redirect:/teams";
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al actualizar el equipo");
             return "redirect:/teams/" + teamId + "/edit";
         }
     }
