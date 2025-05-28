@@ -24,7 +24,6 @@ public class EquipoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-
     @Transactional
     public EquipoData registrar(EquipoData equipo) {
         Optional<Equipo> equipoBD = equipoRepository.findByNombre(equipo.getNombre());
@@ -36,15 +35,6 @@ public class EquipoService {
             Equipo equipoNuevo = modelMapper.map(equipo, Equipo.class);
             equipoNuevo = equipoRepository.save(equipoNuevo);
             return modelMapper.map(equipoNuevo, EquipoData.class);
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public EquipoData findByNombre(String nombre) {
-        Equipo equipo = equipoRepository.findByNombre(nombre).orElse(null);
-        if (equipo == null) return null;
-        else {
-            return modelMapper.map(equipo, EquipoData.class);
         }
     }
 
@@ -163,5 +153,21 @@ public class EquipoService {
 
         equipo.getUsuarios().remove(usuario);
         usuario.getEquipos().remove(equipo);
+    }
+
+    @Transactional
+    public void renombrarEquipo(Long equipoId, String nuevoNombre) {
+        Equipo equipo = equipoRepository.findById(equipoId)
+                .orElseThrow(() -> new EquipoServiceException("Equipo no encontrado"));
+        equipo.setNombre(nuevoNombre);
+        equipoRepository.save(equipo);
+    }
+
+    @Transactional
+    public void eliminarEquipo(Long equipoId) {
+        Equipo equipo = equipoRepository.findById(equipoId)
+                .orElseThrow(() -> new EquipoServiceException("Equipo no encontrado"));
+        equipo.getUsuarios().forEach(usuario -> usuario.getEquipos().remove(equipo));
+        equipoRepository.delete(equipo);
     }
 }
