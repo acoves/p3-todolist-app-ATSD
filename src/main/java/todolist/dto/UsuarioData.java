@@ -1,5 +1,6 @@
 package todolist.dto;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -73,5 +74,13 @@ public class UsuarioData {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public String getFechaNacimientoFormateada() {
+        if (fechaNacimiento != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            return sdf.format(fechaNacimiento);
+        }
+        return "No especificada";
     }
 }

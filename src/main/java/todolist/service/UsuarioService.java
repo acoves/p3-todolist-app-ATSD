@@ -4,8 +4,6 @@ import todolist.dto.UsuarioData;
 import todolist.model.Usuario;
 import todolist.repository.UsuarioRepository;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +15,6 @@ import java.util.Optional;
 @Service
 public class UsuarioService {
 
-    Logger logger = LoggerFactory.getLogger(UsuarioService.class);
-
     public enum LoginStatus {LOGIN_OK, USER_NOT_FOUND, ERROR_PASSWORD}
 
     @Autowired
@@ -26,13 +22,11 @@ public class UsuarioService {
     @Autowired
     private ModelMapper modelMapper;
 
-    // Método nuevo para verificar existencia de administrador
     @Transactional(readOnly = true)
     public boolean existsByAdmin(boolean admin) {
         return usuarioRepository.existsByAdmin(admin);
     }
 
-    // Nuevo método para cambiar el estado enabled
     @Transactional
     public void toggleUserStatus(Long userId, boolean enabled) {
         Usuario usuario = usuarioRepository.findById(userId)
@@ -53,7 +47,6 @@ public class UsuarioService {
         }
     }
 
-    // Registro modificado para validar administrador único
     @Transactional
     public UsuarioData registrar(UsuarioData usuario) {
         Optional<Usuario> usuarioBD = usuarioRepository.findByEmail(usuario.getEmail());
@@ -64,7 +57,6 @@ public class UsuarioService {
         } else if (usuario.getPassword() == null) {
             throw new UsuarioServiceException("El usuario no tiene password");
         } else {
-            // Validar si el nuevo usuario es admin y ya existe uno
             Usuario usuarioNuevo = modelMapper.map(usuario, Usuario.class);
             usuarioNuevo.setEnabled(true);
             if (usuarioNuevo.isAdmin() && usuarioRepository.existsByAdmin(true)) {
@@ -95,5 +87,12 @@ public class UsuarioService {
         return StreamSupport.stream(usuarios.spliterator(), false)
                 .map(usuario -> modelMapper.map(usuario, UsuarioData.class))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isAdmin(Long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new UsuarioServiceException("Usuario no encontrado"));
+        return usuario.isAdmin();
     }
 }
