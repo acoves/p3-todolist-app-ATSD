@@ -21,12 +21,12 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private ModelMapper modelMapper;
-
+    // Excepción personalizada para el servicio de usuario
     @Transactional(readOnly = true)
     public boolean existsByAdmin(boolean admin) {
         return usuarioRepository.existsByAdmin(admin);
     }
-
+    // Método para cambiar el estado de un usuario (habilitado/deshabilitado)
     @Transactional
     public void toggleUserStatus(Long userId, boolean enabled) {
         Usuario usuario = usuarioRepository.findById(userId)
@@ -34,7 +34,7 @@ public class UsuarioService {
         usuario.setEnabled(enabled);
         usuarioRepository.save(usuario);
     }
-
+    // Método para iniciar sesión
     @Transactional(readOnly = true)
     public LoginStatus login(String eMail, String password) {
         Optional<Usuario> usuario = usuarioRepository.findByEmail(eMail);
@@ -47,6 +47,15 @@ public class UsuarioService {
         }
     }
 
+    // Método para buscar un usuario por su ID
+    @Transactional(readOnly = true)
+    public UsuarioData findById(Long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new UsuarioServiceException("Usuario no encontrado"));
+        return modelMapper.map(usuario, UsuarioData.class);
+    }
+
+    // Método para registrar un nuevo usuario
     @Transactional
     public UsuarioData registrar(UsuarioData usuario) {
         Optional<Usuario> usuarioBD = usuarioRepository.findByEmail(usuario.getEmail());
@@ -67,20 +76,23 @@ public class UsuarioService {
             return modelMapper.map(usuarioNuevo, UsuarioData.class);
         }
     }
-
+    // Método para buscar un usuario por su email
     @Transactional(readOnly = true)
     public UsuarioData findByEmail(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
         return (usuario != null) ? modelMapper.map(usuario, UsuarioData.class) : null;
     }
-
+    // Método para obtener todos los usuarios ordenados por email
     @Transactional(readOnly = true)
-    public UsuarioData findById(Long usuarioId) {
+    public boolean isAdmin(Long usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new UsuarioServiceException("Usuario no encontrado"));
-        return modelMapper.map(usuario, UsuarioData.class);
+        return usuario.isAdmin();
     }
 
+
+
+    // Método para obtener todos los usuarios
     @Transactional(readOnly = true)
     public List<UsuarioData> findAllUsuarios() {
         Iterable<Usuario> usuarios = usuarioRepository.findAll();
@@ -89,10 +101,4 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public boolean isAdmin(Long usuarioId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new UsuarioServiceException("Usuario no encontrado"));
-        return usuario.isAdmin();
-    }
 }

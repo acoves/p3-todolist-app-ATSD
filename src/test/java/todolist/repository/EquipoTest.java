@@ -21,85 +21,68 @@ public class EquipoTest {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
+    // Test para comprobar que se crea un equipo con un nombre
     @Test
     public void crearEquipo() {
         Equipo equipo = new Equipo("Project P1");
         assertThat(equipo.getNombre()).isEqualTo("Project P1");
     }
-
+    // Test para comprobar que se crea un equipo y se guarda en la base de datos
     @Test
     @Transactional
     public void grabarYBuscarEquipo() {
-        // GIVEN
-        // Un equipo nuevo
+
         Equipo equipo = new Equipo("Project P1");
 
-        // Probamos el constructor vacío, necesario para que funcione JPA/Hibernate
         Equipo equipo1 = new Equipo();
 
-        // Creamos ya el equipo nuevo
         equipo = new Equipo("Project P1");
 
-        // WHEN
-        // Salvamos el equipo en la base de datos
+
         equipoRepository.save(equipo);
 
-        // THEN
-        // Su identificador se ha actualizado y lo podemos
-        // usar para recuperarlo de la base de datos
         Long equipoId = equipo.getId();
         assertThat(equipoId).isNotNull();
         Equipo equipoDB = equipoRepository.findById(equipoId).orElse(null);
         assertThat(equipoDB).isNotNull();
         assertThat(equipoDB.getNombre()).isEqualTo("Project P1");
     }
-
+    // Test para comprobar que se crea un equipo y se guarda en la base de datos
     @Test
     public void comprobarIgualdadEquipos() {
-        // GIVEN
-        // Creamos tres equipos sin id, sólo con el nombre
+
         Equipo equipo1 = new Equipo("Project P1");
         Equipo equipo2 = new Equipo("Project P2");
         Equipo equipo3 = new Equipo("Project P2");
 
-        // THEN
-        // Comprobamos igualdad basada en el atributo nombre y que el
-        // hashCode es el mismo para dos equipos con igual nombre
+
         assertThat(equipo1).isNotEqualTo(equipo2);
         assertThat(equipo2).isEqualTo(equipo3);
         assertThat(equipo2.hashCode()).isEqualTo(equipo3.hashCode());
 
-        // WHEN
-        // Añadimos identificadores y comprobamos igualdad por identificadores
+
         equipo1.setId(1L);
         equipo2.setId(1L);
         equipo3.setId(2L);
 
-        // THEN
-        // Comprobamos igualdad basada en el atributo nombre
         assertThat(equipo1).isEqualTo(equipo2);
         assertThat(equipo2).isNotEqualTo(equipo3);
     }
-
+    // Test para comprobar que se añade un usuario a un equipo
     @Test
     @Transactional
     public void comprobarRelacionBaseDatos() {
-        // GIVEN
-        // Un equipo y un usuario en la BD
+
         Equipo equipo = new Equipo("Project 1");
         equipoRepository.save(equipo);
 
         Usuario usuario = new Usuario("user@umh");
         usuarioRepository.save(usuario);
 
-        // WHEN
-        // Añadimos el usuario al equipo
+
 
         equipo.addUsuario(usuario);
 
-        // THEN
-        // La relación entre usuario y equipo queda actualizada en BD
 
         Equipo equipoBD = equipoRepository.findById(equipo.getId()).orElse(null);
         Usuario usuarioBD = usuarioRepository.findById(usuario.getId()).orElse(null);
@@ -109,19 +92,16 @@ public class EquipoTest {
         assertThat(usuario.getEquipos()).hasSize(1);
         assertThat(usuario.getEquipos()).contains(equipo);
     }
-
+    // Test para comprobar que se recuperan todos los equipos de la base de datos
     @Test
     @Transactional
     public void comprobarFindAll() {
-        // GIVEN
-        // Dos equipos en la base de datos
+
         equipoRepository.save(new Equipo("Proyecto 2"));
         equipoRepository.save(new Equipo("Proyecto 3"));
 
-        // WHEN
         List<Equipo> equipos = equipoRepository.findAll();
 
-        // THEN
         assertThat(equipos).hasSize(2);
     }
 

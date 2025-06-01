@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="todolist.repository.UserTest" time="0.029" tests="6" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="todolist.service.EquipoServiceTest" time="0.128" tests="12" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="20"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,10 +58,16 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="64.0"/>
   </properties>
-  <testcase name="buscarUsuarioEnBaseDatos" classname="todolist.repository.UserTest" time="0.005"/>
-  <testcase name="comprobarIgualdadUsuariosConId" classname="todolist.repository.UserTest" time="0.002"/>
-  <testcase name="comprobarIgualdadUsuariosSinId" classname="todolist.repository.UserTest" time="0.002"/>
-  <testcase name="crearUsuarioBaseDatos" classname="todolist.repository.UserTest" time="0.008"/>
-  <testcase name="buscarUsuarioPorEmail" classname="todolist.repository.UserTest" time="0.006"/>
-  <testcase name="crearUsuario" classname="todolist.repository.UserTest" time="0.002"/>
+  <testcase name="añadirUsuarioDuplicadoAEquipoTest" classname="todolist.service.EquipoServiceTest" time="0.025"/>
+  <testcase name="crearEquipoConNombreNuloLanzaExcepcion" classname="todolist.service.EquipoServiceTest" time="0.007"/>
+  <testcase name="eliminarUsuarioInexistenteDeEquipoTest" classname="todolist.service.EquipoServiceTest" time="0.007"/>
+  <testcase name="eliminarEquipoTest" classname="todolist.service.EquipoServiceTest" time="0.009"/>
+  <testcase name="renombrarEquipoTest" classname="todolist.service.EquipoServiceTest" time="0.007"/>
+  <testcase name="listadoEquiposOrdenAlfabetico" classname="todolist.service.EquipoServiceTest" time="0.007"/>
+  <testcase name="eliminarUsuarioDeEquipoTest" classname="todolist.service.EquipoServiceTest" time="0.014"/>
+  <testcase name="comprobarExcepciones" classname="todolist.service.EquipoServiceTest" time="0.009"/>
+  <testcase name="añadirUsuarioAEquipoTest" classname="todolist.service.EquipoServiceTest" time="0.009"/>
+  <testcase name="recuperarEquiposDeUsuario" classname="todolist.service.EquipoServiceTest" time="0.017"/>
+  <testcase name="crearRecuperarEquipo" classname="todolist.service.EquipoServiceTest" time="0.006"/>
+  <testcase name="crearEquipoConNombreDuplicadoLanzaExcepcion" classname="todolist.service.EquipoServiceTest" time="0.005"/>
 </testsuite>

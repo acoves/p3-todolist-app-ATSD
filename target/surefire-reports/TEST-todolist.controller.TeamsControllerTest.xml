@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="todolist.repository.UserTest" time="0.029" tests="6" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="todolist.controller.TeamsControllerTest" time="0.245" tests="20" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="20"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,10 +58,24 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="64.0"/>
   </properties>
-  <testcase name="buscarUsuarioEnBaseDatos" classname="todolist.repository.UserTest" time="0.005"/>
-  <testcase name="comprobarIgualdadUsuariosConId" classname="todolist.repository.UserTest" time="0.002"/>
-  <testcase name="comprobarIgualdadUsuariosSinId" classname="todolist.repository.UserTest" time="0.002"/>
-  <testcase name="crearUsuarioBaseDatos" classname="todolist.repository.UserTest" time="0.008"/>
-  <testcase name="buscarUsuarioPorEmail" classname="todolist.repository.UserTest" time="0.006"/>
-  <testcase name="crearUsuario" classname="todolist.repository.UserTest" time="0.002"/>
+  <testcase name="listTeams_ErrorServicio_MuestraError" classname="todolist.controller.TeamsControllerTest" time="0.067"/>
+  <testcase name="eliminarEquipo_NoAdmin_RedirigeConError" classname="todolist.controller.TeamsControllerTest" time="0.008"/>
+  <testcase name="editarEquipo_ErrorServicio_RedirigeConError" classname="todolist.controller.TeamsControllerTest" time="0.012"/>
+  <testcase name="eliminarEquipo_ErrorServicio_RedirigeConError" classname="todolist.controller.TeamsControllerTest" time="0.012"/>
+  <testcase name="listTeamMembers_EquipoInexistente_MuestraError" classname="todolist.controller.TeamsControllerTest" time="0.008"/>
+  <testcase name="eliminarUsuarioDelEquipo_Exitoso_RedirigeConExito" classname="todolist.controller.TeamsControllerTest" time="0.009"/>
+  <testcase name="mostrarFormularioEdicion_UsuarioNoAdmin_Redirige" classname="todolist.controller.TeamsControllerTest" time="0.008"/>
+  <testcase name="crearEquipo_Duplicado_MuestraError" classname="todolist.controller.TeamsControllerTest" time="0.014"/>
+  <testcase name="mostrarFormularioCreacion_UsuarioLogeado_MuestraFormulario" classname="todolist.controller.TeamsControllerTest" time="0.011"/>
+  <testcase name="editarEquipo_UsuarioNoAdmin_Redirige" classname="todolist.controller.TeamsControllerTest" time="0.008"/>
+  <testcase name="listTeams_UsuarioNoLogeado_RedirigeALogin" classname="todolist.controller.TeamsControllerTest" time="0.007"/>
+  <testcase name="mostrarFormularioEdicion_EquipoNoExiste_RedirigeConError" classname="todolist.controller.TeamsControllerTest" time="0.008"/>
+  <testcase name="añadirUsuarioAlEquipo_Exitoso_RedirigeConExito" classname="todolist.controller.TeamsControllerTest" time="0.009"/>
+  <testcase name="accionesProtegidas_RedirigenSinAutenticacion" classname="todolist.controller.TeamsControllerTest" time="0.009"/>
+  <testcase name="listTeamMembers_EquipoValido_MuestraMiembros" classname="todolist.controller.TeamsControllerTest" time="0.009"/>
+  <testcase name="mostrarFormularioEdicion_AdminYEquipoValido_MuestraFormulario" classname="todolist.controller.TeamsControllerTest" time="0.008"/>
+  <testcase name="editarEquipo_Valido_RedirigeATeams" classname="todolist.controller.TeamsControllerTest" time="0.007"/>
+  <testcase name="eliminarEquipo_AdminExitoso_RedirigeATeams" classname="todolist.controller.TeamsControllerTest" time="0.007"/>
+  <testcase name="mostrarFormularioCreacion_UsuarioNoLogeado_RedirigeALogin" classname="todolist.controller.TeamsControllerTest" time="0.007"/>
+  <testcase name="listTeams_UsuarioLogeado_MuestraEquipos" classname="todolist.controller.TeamsControllerTest" time="0.01"/>
 </testsuite>

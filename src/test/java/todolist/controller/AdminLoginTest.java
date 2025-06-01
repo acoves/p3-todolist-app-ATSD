@@ -19,33 +19,29 @@ public class AdminLoginTest {
 
     @Autowired
     private UsuarioService usuarioService;
-
+    // Test para verificar que un usuario administrador es redirigido a la lista de usuarios
     @Test
     public void testLoginAdminRedirigeAListaUsuarios() throws Exception {
-        // Registrar admin
         UsuarioData admin = new UsuarioData();
         admin.setEmail("admin@umh.es");
         admin.setPassword("admin123");
         admin.setAdmin(true);
         usuarioService.registrar(admin);
 
-        // Login como admin
         mockMvc.perform(post("/login")
                         .param("eMail", "admin@umh.es")
                         .param("password", "admin123"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/registered"));
     }
-
+    // Test para verificar que un usuario normal es redirigido a la página de tareas
     @Test
     public void testLoginUsuarioNormalRedirigeATareas() throws Exception {
-        // Registrar usuario normal
         UsuarioData usuario = new UsuarioData();
         usuario.setEmail("user@umh.es");
         usuario.setPassword("user123");
         usuarioService.registrar(usuario);
 
-        // Login como usuario
         mockMvc.perform(post("/login")
                         .param("eMail", "user@umh.es")
                         .param("password", "user123"))

@@ -1,22 +1,28 @@
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\model\Tarea.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\service\UsuarioServiceException.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\service\TareaServiceException.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\controller\TareaController.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\dto\UsuarioData.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\controller\HomeController.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\service\UsuarioService.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\model\Usuario.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\controller\UsuarioController.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\repository\TareaRepository.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\authentication\ManagerUserSession.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\controller\exception\TareaNotFoundException.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\controller\exception\UsuarioNoLogeadoException.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\Application.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\repository\UsuarioRepository.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\controller\LoginController.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\dto\LoginData.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\dto\TareaData.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\service\TareaService.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\config\ModelMapperConfig.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\dto\RegistroData.java
-C:\Users\Usuario\OneDrive\Desktop\Esto es el ultimo intento\p3-todolist-app-ATSD\src\main\java\todolist\service\InitDbService.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\dto\TareaData.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\repository\TareaRepository.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\authentication\ManagerUserSession.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\controller\HomeController.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\dto\RegistroData.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\repository\EquipoRepository.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\controller\TareaController.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\dto\LoginData.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\Application.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\config\ModelMapperConfig.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\controller\UsuarioController.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\model\Tarea.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\controller\LoginController.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\controller\TeamsController.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\repository\UsuarioRepository.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\service\EquipoService.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\model\Equipo.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\service\TareaServiceException.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\service\TareaService.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\service\UsuarioService.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\controller\exception\TareaNotFoundException.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\service\UsuarioServiceException.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\dto\UsuarioData.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\dto\EquipoData.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\service\InitDbService.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\controller\exception\UsuarioNoLogeadoException.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\service\EquipoServiceException.java
+C:\Users\Usuario\OneDrive\Desktop\Practica3Agiles\p3-todolist-app-ATSD\src\main\java\todolist\model\Usuario.java

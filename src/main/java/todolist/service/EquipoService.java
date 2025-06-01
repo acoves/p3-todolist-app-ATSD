@@ -24,6 +24,7 @@ public class EquipoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    // Método para registrar un nuevo equipo
     @Transactional
     public EquipoData registrar(EquipoData equipo) {
         Optional<Equipo> equipoBD = equipoRepository.findByNombre(equipo.getNombre());
@@ -37,7 +38,7 @@ public class EquipoService {
             return modelMapper.map(equipoNuevo, EquipoData.class);
         }
     }
-
+    // Método para encontrar un equipo por su ID
     @Transactional(readOnly = true)
     public EquipoData findById(Long equipoId) {
         Equipo equipo = equipoRepository.findById(equipoId).orElse(null);
@@ -46,23 +47,7 @@ public class EquipoService {
             return modelMapper.map(equipo, EquipoData.class);
         }
     }
-
-    @Transactional
-    public EquipoData crearEquipo(String nombre) {
-        Optional<Equipo> equipoBD = equipoRepository.findByNombre(nombre);
-        if (equipoBD.isPresent())
-            throw new EquipoServiceException("El equipo " + nombre + " ya está registrado");
-        else if (nombre == null)
-            throw new EquipoServiceException("El equipo no tiene nombre");
-        else {
-            Equipo equipoNuevo = modelMapper.map(new Equipo(), Equipo.class);
-            equipoNuevo.setNombre(nombre);
-            equipoNuevo = equipoRepository.save(equipoNuevo);
-
-            return modelMapper.map(equipoNuevo, EquipoData.class);
-        }
-    }
-
+    // Método para recuperar un equipo por su ID
     @Transactional
     public EquipoData recuperarEquipo(Long id) {
         Equipo equipo = equipoRepository.findById(id).orElse(null);
@@ -70,7 +55,7 @@ public class EquipoService {
             throw new EquipoServiceException("El equipo no existe");
         return modelMapper.map(equipo, EquipoData.class);
     }
-
+    // Método para encontrar todos los equipos ordenados por nombre
     @Transactional
     public List<EquipoData> findAllOrdenadoPorNombre() {
         List<Equipo> equipos;
@@ -83,7 +68,7 @@ public class EquipoService {
         Collections.sort(equiposData, (a, b) -> a.getNombre().compareTo(b.getNombre()));
         return equiposData;
     }
-
+    // Método para añadir un usuario a un equipo
     @Transactional
     public void añadirUsuarioAEquipo(Long equipoId, Long usuarioId) {
         Equipo equipo = equipoRepository.findById(equipoId)
@@ -101,7 +86,7 @@ public class EquipoService {
         equipoRepository.save(equipo);
         usuarioRepository.save(usuario);
     }
-
+    // Método para obtener los usuarios de un equipo
     @Transactional
     public List<UsuarioData> usuariosEquipo(Long idEquipo) {
         Equipo equipo = equipoRepository.findById(idEquipo)
@@ -112,7 +97,7 @@ public class EquipoService {
                 .map(usuario -> modelMapper.map(usuario, UsuarioData.class))
                 .collect(Collectors.toList());
     }
-
+    // Método para obtener los equipos de un usuario
     @Transactional
     public List<EquipoData> equiposUsuario(long idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
@@ -125,7 +110,7 @@ public class EquipoService {
         return equipos;
 
     }
-
+    // Método para encontrar todos los usuarios que no están en un equipo específico
     @Transactional(readOnly = true)
     public List<UsuarioData> findAllUsuariosNoEnEquipo(Long equipoId) {
         Equipo equipo = equipoRepository.findById(equipoId)
@@ -143,7 +128,7 @@ public class EquipoService {
                 .map(usuario -> modelMapper.map(usuario, UsuarioData.class))
                 .collect(Collectors.toList());
     }
-
+    // Método para eliminar un usuario de un equipo
     @Transactional
     public void eliminarUsuarioDeEquipo(Long equipoId, Long usuarioId) {
         Equipo equipo = equipoRepository.findById(equipoId)
@@ -154,7 +139,7 @@ public class EquipoService {
         equipo.getUsuarios().remove(usuario);
         usuario.getEquipos().remove(equipo);
     }
-
+    // Método para renombrar un equipo
     @Transactional
     public void renombrarEquipo(Long equipoId, String nuevoNombre) {
         Equipo equipo = equipoRepository.findById(equipoId)
@@ -162,12 +147,28 @@ public class EquipoService {
         equipo.setNombre(nuevoNombre);
         equipoRepository.save(equipo);
     }
-
+    // Método para eliminar un equipo
     @Transactional
     public void eliminarEquipo(Long equipoId) {
         Equipo equipo = equipoRepository.findById(equipoId)
                 .orElseThrow(() -> new EquipoServiceException("Equipo no encontrado"));
         equipo.getUsuarios().forEach(usuario -> usuario.getEquipos().remove(equipo));
         equipoRepository.delete(equipo);
+    }
+    // Método para crear un equipo con nombre
+    @Transactional
+    public EquipoData crearEquipo(String nombre) {
+        Optional<Equipo> equipoBD = equipoRepository.findByNombre(nombre);
+
+        if (equipoBD.isPresent()) {
+            throw new EquipoServiceException("El equipo " + nombre + " ya está registrado");
+        } else if (nombre == null) {
+            throw new EquipoServiceException("El equipo no tiene nombre");
+        } else {
+            Equipo equipoNuevo = new Equipo();
+            equipoNuevo.setNombre(nombre);
+            equipoNuevo = equipoRepository.save(equipoNuevo);
+            return modelMapper.map(equipoNuevo, EquipoData.class);
+        }
     }
 }

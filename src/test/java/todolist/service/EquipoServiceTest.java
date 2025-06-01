@@ -9,6 +9,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 @SpringBootTest
@@ -20,7 +21,7 @@ public class EquipoServiceTest {
 
     @Autowired
     UsuarioService usuarioService;
-
+    // Test para el servicio de equipos
     @Test
     public void crearRecuperarEquipo() {
 
@@ -31,9 +32,10 @@ public class EquipoServiceTest {
         assertThat(equipoBd).isNotNull();
         assertThat(equipoBd.getNombre()).isEqualTo("Proyecto 1");
     }
-
+    // Test para listar todos los equipos
     @Test
     public void listadoEquiposOrdenAlfabetico() {
+
         equipoService.crearEquipo("Proyecto BBB");
         equipoService.crearEquipo("Proyecto AAA");
 
@@ -45,7 +47,7 @@ public class EquipoServiceTest {
         assertThat(equipos.get(0).getNombre()).isEqualTo("Proyecto AAA");
         assertThat(equipos.get(1).getNombre()).isEqualTo("Proyecto BBB");
     }
-
+    // Test para añadir un usuario a un equipo
     @Test
     public void añadirUsuarioAEquipoTest() {
 
@@ -63,7 +65,7 @@ public class EquipoServiceTest {
         assertThat(usuarios).hasSize(1);
         assertThat(usuarios.get(0).getEmail()).isEqualTo("user@umh");
     }
-
+    // Test para recuperar los usuarios de un equipo
     @Test
     public void recuperarEquiposDeUsuario() {
 
@@ -84,6 +86,7 @@ public class EquipoServiceTest {
         assertThat(equipos.get(0).getNombre()).isEqualTo("Project 1");
         assertThat(equipos.get(1).getNombre()).isEqualTo("Project 2");
     }
+    // Test para recuperar los usuarios de un equipo
     @Test
     public void comprobarExcepciones() {
 
@@ -96,12 +99,11 @@ public class EquipoServiceTest {
         assertThatThrownBy(() -> equipoService.equiposUsuario(1L))
                 .isInstanceOf(EquipoServiceException.class);
 
-
         EquipoData equipo = equipoService.crearEquipo("Project 1");
         assertThatThrownBy(() -> equipoService.añadirUsuarioAEquipo(equipo.getId(), 1L))
                 .isInstanceOf(EquipoServiceException.class);
     }
-
+    // Test para eliminar un usuario de un equipo
     @Test
     public void eliminarUsuarioDeEquipoTest() {
         UsuarioData usuarioData = new UsuarioData();
@@ -116,7 +118,7 @@ public class EquipoServiceTest {
         List<UsuarioData> usuarios = equipoService.usuariosEquipo(equipo.getId());
         assertThat(usuarios).isEmpty();
     }
-
+    // Test para eliminar un usuario que no existe en el equipo
     @Test
     public void eliminarUsuarioInexistenteDeEquipoTest() {
         EquipoData equipo = equipoService.crearEquipo("Project Y");
@@ -124,7 +126,7 @@ public class EquipoServiceTest {
         assertThatThrownBy(() -> equipoService.eliminarUsuarioDeEquipo(equipo.getId(), 999L))
                 .isInstanceOf(EquipoServiceException.class);
     }
-
+    // Test para añadir un usuario que ya existe en el equipo
     @Test
     public void añadirUsuarioDuplicadoAEquipoTest() {
         UsuarioData usuarioData = new UsuarioData();
@@ -138,7 +140,7 @@ public class EquipoServiceTest {
         assertThatThrownBy(() -> equipoService.añadirUsuarioAEquipo(equipo.getId(), usuario.getId()))
                 .isInstanceOf(EquipoServiceException.class);
     }
-
+    // Test para renombrar un equipo
     @Test
     public void renombrarEquipoTest() {
         EquipoData equipo = equipoService.crearEquipo("Old Name");
@@ -148,7 +150,7 @@ public class EquipoServiceTest {
         EquipoData updatedEquipo = equipoService.recuperarEquipo(equipo.getId());
         assertThat(updatedEquipo.getNombre()).isEqualTo("New Name");
     }
-
+    // Test para renombrar un equipo con nombre nulo
     @Test
     public void eliminarEquipoTest() {
         EquipoData equipo = equipoService.crearEquipo("Team to Delete");
@@ -157,5 +159,23 @@ public class EquipoServiceTest {
 
         assertThatThrownBy(() -> equipoService.recuperarEquipo(equipo.getId()))
                 .isInstanceOf(EquipoServiceException.class);
+    }
+    // Test para renombrar un equipo con nombre nulo
+    @Test
+    public void crearEquipoConNombreNuloLanzaExcepcion() {
+        assertThatThrownBy(() -> equipoService.crearEquipo(null))
+                .isInstanceOf(EquipoServiceException.class)
+                .hasMessage("El equipo no tiene nombre");
+    }
+    // Test para crear un equipo con nombre duplicado
+    @Test
+    void crearEquipoConNombreDuplicadoLanzaExcepcion() {
+        String nombreEquipo = "Proyecto Alpha";
+
+        equipoService.crearEquipo(nombreEquipo);
+
+        assertThatThrownBy(() -> equipoService.crearEquipo(nombreEquipo))
+                .isInstanceOf(EquipoServiceException.class)
+                .hasMessage("El equipo Proyecto Alpha ya está registrado");
     }
 }

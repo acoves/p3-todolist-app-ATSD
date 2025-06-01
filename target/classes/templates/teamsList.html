@@ -22,6 +22,9 @@
         </div>
     </div>
 
+    <div th:if="${success != null}" class="alert alert-success mt-3" th:text="${success}"></div>
+    <div th:if="${error != null}" class="alert alert-danger mt-3" th:text="${error}"></div>
+
     <div class="row mt-4">
         <div class="col-md-8 offset-md-2">
             <div class="card shadow-lg">
@@ -37,8 +40,8 @@
                             <thead class="thead-dark">
                             <tr>
                                 <th scope="col" class="w-25">ID</th>
-                                <th scope="col" class="w-50">Nombre</th>
-                                <th scope="col" class="w-25 text-center">Acciones</th>
+                                <th scope="col" class="w-50">Name</th>
+                                <th scope="col" class="w-25 text-center">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -46,22 +49,47 @@
                                 th:class="${stat.odd} ? 'table-light' : ''">
                                 <td th:text="${team.id}"></td>
                                 <td>
-                                        <span th:text="${team.nombre}"
-                                              class="font-weight-bold"></span>
+                                    <span th:text="${team.nombre}"
+                                          class="font-weight-bold"></span>
                                 </td>
                                 <td class="text-center">
-                                    <a th:href="@{|/teams/${team.id}/members|}"
-                                       class="btn btn-sm btn-outline-info"
-                                       title="Ver miembros del equipo">
-                                        <i class="fas fa-user-friends mr-1"></i>
-                                        <span class="d-none d-md-inline">Members</span>
-                                    </a>
+                                    <div class="btn-group" role="group">
+                                        <!-- Botón Miembros -->
+                                        <a th:href="@{|/teams/${team.id}/members|}"
+                                           class="btn btn-sm btn-outline-info"
+                                           title="Ver miembros del equipo">
+                                            <i class="fas fa-user-friends mr-1"></i>
+                                            <span class="d-none d-md-inline">Members</span>
+                                        </a>
+
+
+                                        <a th:if="${usuarioLogeado != null and usuarioLogeado.admin}"
+                                           th:href="@{|/teams/${team.id}/edit|}"
+                                           class="btn btn-sm btn-outline-warning ml-1"
+                                           title="Editar equipo">
+                                            <i class="fas fa-edit mr-1"></i>
+                                            <span class="d-none d-md-inline">Edit</span>
+                                        </a>
+
+                                        <form th:if="${usuarioLogeado != null and usuarioLogeado.admin}"
+                                              th:action="@{|/teams/${team.id}/delete|}"
+                                              method="post"
+                                              class="d-inline ml-1">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    title="Eliminar equipo"
+                                                    onclick="return confirm('¿Eliminar este equipo?')">
+                                                <i class="fas fa-trash-alt mr-1"></i>
+                                                <span class="d-none d-md-inline">Delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(teams)}">
                                 <td colspan="3" class="text-center text-muted py-4">
                                     <i class="fas fa-info-circle fa-2x mb-3"></i><br>
-                                    There are no registered teams
+                                    No registered teams found.
                                 </td>
                             </tr>
                             </tbody>
@@ -69,6 +97,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-8 offset-md-2 text-center">
+            <a th:href="@{/teams/new}" class="btn btn-success">
+                <i class="fas fa-plus-circle mr-2"></i>Create New Team
+            </a>
         </div>
     </div>
 </div>
