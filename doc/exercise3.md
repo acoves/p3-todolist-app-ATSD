@@ -320,5 +320,5 @@ The implementation adheres to the principles of TDD and clean architecture. For 
 
 * **GitHub Repository**: [https://github.com/acoves/p3-todolist-app-ATSD](https://github.com/acoves/p3-todolist-app-ATSD)
 * **Trello's Board**: [https://trello.com/invite/b/67e275084f990f292deb22ad/ATTId1d9bb29fd24e1f08359a3d9bf56dde546F9F226/p2-p3-to-do-list-app](https://trello.com/invite/b/67e275084f990f292deb22ad/ATTId1d9bb29fd24e1f08359a3d9bf56dde546F9F226/p2-p3-to-do-list-app)
-* **Docker Image**:
+* **Docker Image**: [https://hub.docker.com/r/acoves/p3-todolistapp](https://hub.docker.com/r/acoves/p3-todolistapp)
 

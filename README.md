@@ -178,7 +178,7 @@ Detailed explanation available in `/doc/exercise3.md`:
 
 * GitHub: [github.com/acoves/p3-todolist-app-ATSD](https://github.com/acoves/p3-todolist-app-ATSD)
 * Trello: [Project Board](https://trello.com/invite/b/67e275084f990f292deb22ad/ATTId1d9bb29fd24e1f08359a3d9bf56dde546F9F226/p2-p3-to-do-list-app)
-* Docker: 
+* Docker: [https://hub.docker.com/r/acoves/p3-todolistapp](https://hub.docker.com/r/acoves/p3-todolistapp)
 ---
 
 **Version:** 1.2.0
