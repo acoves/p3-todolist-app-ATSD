@@ -316,6 +316,16 @@ The implementation adheres to the principles of TDD and clean architecture. For 
 
 ---
 
+## Docker Commands
+
+To run the application with Docker:
+
+```bash
+docker pull acoves/p3-todolistapp
+docker run -p 8080:8080 acoves/p3-todolistapp
+```
+--- 
+
 ## 6. Useful Links
 
 * **GitHub Repository**: [https://github.com/acoves/p3-todolist-app-ATSD](https://github.com/acoves/p3-todolist-app-ATSD)

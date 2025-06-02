@@ -173,6 +173,15 @@ Detailed explanation available in `/doc/exercise3.md`:
 * Exception handling
 
 ---
+## Docker Commands
+
+To run the application with Docker:
+
+```bash
+docker pull acoves/p3-todolistapp
+docker run -p 8080:8080 acoves/p3-todolistapp
+```
+--- 
 
 ## 🌐 Useful Links
 
